@@ -1,0 +1,47 @@
+datasource db { 
+  provider = "postgresql" 
+  url      = env("DATABASE_URL") 
+} 
+ 
+generator client { 
+  provider = "prisma-client-js" 
+} 
+ 
+model Category {
+  id    Int      @id @default(autoincrement())
+  name  String   @unique
+  news  NewsArticle[]
+}
+
+model NewsArticle {
+  id            Int       @id @default(autoincrement())
+  title         String
+  content       String
+  image         String?
+  userEmail     String?
+  userWallet    String
+  categoryId    Int
+  category      Category  @relation(fields: [categoryId], references: [id])
+  popularity    String?
+  likes         Int       @default(0)
+  createdAt     DateTime  @default(now())
+  comments      Comment[]
+  commentsCount Int       @default(0)
+  trending      Boolean   @default(false) // Add a field to mark trending articles
+}
+
+model Comment {
+  id            Int          @id @default(autoincrement())
+  newsArticleId Int
+  newsArticle   NewsArticle  @relation(fields: [newsArticleId], references: [id])
+  content       String
+  user          String       @default("Anonymous")
+  createdAt     DateTime     @default(now())
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  password     String
+  walletAddress String  @unique // Ensure walletAddress is unique
+}

@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/**/*",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "prisma/schema.prisma",
+          "node_modules/.prisma/client/**"
+        ],
+        "tsconfig": "tsconfig.vercel.json"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)/?$",
+      "dest": "/$1.html"
+    }
+  ]
+}
