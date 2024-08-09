@@ -36,17 +36,21 @@ export const actions = {
 
       // Generate JWT token
       const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+      console.log(token)
 
       // Send the token to the client in the response
       return {
+
         success: true,
         token, // Send token to be handled on the client side
         address: addresses.data.addresses[0],
         balance: DefaultWalletBalance.data.balance.summary
       };
+      
     } catch (err) {
       console.error('Database error:', err);
       return { success: false, error: 'Database error' };
     }
   },
 };
+console.log(actions.login)

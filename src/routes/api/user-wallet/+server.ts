@@ -4,7 +4,7 @@ import type { RequestHandler } from "@sveltejs/kit";
 const prisma = new PrismaClient();
 
 const getUserIdFromRequest = (request: Request): number => {
-  return 17; // Placeholder, replace with actual implementation.
+  return 1; // Placeholder, replace with actual implementation.
 };
 
 export const GET: RequestHandler = async ({ request }: { request: Request }) => {

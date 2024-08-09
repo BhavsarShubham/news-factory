@@ -7,7 +7,7 @@
   let image = '';
   let successMessage = '';
   let walletAddress = '';
-  let transactionLink = ''; // Add this line
+  let transactionLink = ''; 
 
   let categories = [
     { name: 'World' },
@@ -41,7 +41,8 @@
       userWallet: walletAddress,
     };
 
-    const token = localStorage.getItem('token'); // Retrieve the JWT token from local storage
+    const token = localStorage.getItem('token'); 
+    console.log(token);
 
     if (!token) {
       successMessage = 'Authentication token not found';
@@ -113,6 +114,9 @@
           {#if successMessage}
             <p class="mt-4 text-lg font-medium {successMessage.includes('success') ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">{successMessage}</p>
           {/if}
+              {#if transactionLink}
+             <p class="mt-4 text-lg font-medium text-blue-600 dark:text-blue-400">Transaction Link: <a href={transactionLink} target="_blank">{transactionLink}</a></p>
+               {/if}
         </form>
       </main>
 
@@ -132,7 +136,5 @@
       </aside>
     </div>
   </div>
-    {#if transactionLink}
-    <p class="mt-4 text-lg font-medium text-blue-600 dark:text-blue-400">Transaction Link: <a href={transactionLink} target="_blank">{transactionLink}</a></p>
-    {/if}
+
 </section>
