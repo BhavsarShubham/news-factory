@@ -41,19 +41,10 @@
       userWallet: walletAddress,
     };
 
-    const token = localStorage.getItem('token'); 
-    console.log(token);
-
-    if (!token) {
-      successMessage = 'Authentication token not found';
-      return;
-    }
-
     const response = await fetch('/api/news', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Include the JWT token in the header
       },
       body: JSON.stringify(data),
     });
@@ -61,7 +52,7 @@
     if (response.ok) {
       const result = await response.json();
       successMessage = 'News article successfully created!';
-      transactionLink = result.transactionLink; // Store the blockchain link
+      transactionLink = result.transactionLink; 
       console.log('News created:', result);
     } else {
       const errorData = await response.json();
@@ -70,6 +61,12 @@
     }
   }
 </script>
+
+<section class="bg-white dark:bg-gray-900">
+  <!-- The rest of your component's HTML remains the same -->
+</section>
+
+
 <section class="bg-white dark:bg-gray-900">
   <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-12">
     <header class="mb-8">
@@ -107,7 +104,8 @@
             <label for="image" class="block mb-2 text-lg font-medium text-gray-900 dark:text-gray-300">Image URL</label>
             <input id="image" type="text" bind:value={image} class="w-full p-2.5 bg-gray-100 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
           </div>
-          <button type="submit" class="bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 px-6 rounded-lg w-full flex items-center justify-center sm:w-auto dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400">
+          <button type="submit" class="bg-slate-900 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 text-white font-semibold h-12 px
+-6 rounded-lg w-full flex items-center justify-center sm:w-auto dark:bg-sky-500 dark:highlight-white/20 dark:hover:bg-sky-400">
             Submit
           </button>
 

@@ -1,22 +1,22 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
-  
-  export let form: { success?: boolean; balance?: number; address?: string };
 
-if (typeof window !== 'undefined' && form?.success) {
-  localStorage.setItem('token', form.token); // Make sure the token is set
+  export let form: { success?: boolean; balance?: number; address?: string; token?: string };
+  if (typeof window !== 'undefined' && form?.success && form.token) {
+  localStorage.setItem('token', form.token);
   console.log("Token stored in local storage:", localStorage.getItem('token'));
-  window.location.href = "/dashboard";
+  window.location.href = "/dashboard";  // Redirect to the dashboard page
 }
+
+
   let showLogin = true;
 
   function toggleForm() {
     showLogin = !showLogin;
   }
-  
-
 </script>
 
+<!-- Your HTML structure -->
 <div class="min-h-screen flex flex-col items-center justify-center space-y-10 bg-gray-900 text-white">
   <div class="w-full max-w-md p-8 bg-gray-800 rounded-lg ring-2 ring-gray-700">
     {#if showLogin}
@@ -59,15 +59,3 @@ if (typeof window !== 'undefined' && form?.success) {
     {/if}
   </div>
 </div>
-
-<style>
-  .bg-primary-600 {
-    background-color: #4f46e5;
-  }
-  .hover\:bg-primary-700:hover {
-    background-color: #4338ca;
-  }
-  .focus\:ring-primary-500:focus {
-    ring-color: #6366f1;
-  }
-</style>
