@@ -38,6 +38,7 @@
     "@sveltejs/adapter-vercel": "^5.4.1",
     "are-we-there-yet": "^4.0.2",
     "axios": "^1.7.3",
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "bsv": "^2.0.10",
     "debug": "^4.3.6",
