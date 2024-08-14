@@ -43,7 +43,9 @@ export async function POST({ request }: { request: Request }) {
     // Perform payment
     const payResponse = await neucron.pay.txSpend(options);
     console.log('Payment response:', payResponse);
+
     const transactionId = payResponse.data?.txid;
+    console.log('Transaction ID:', transactionId);
 
     if (!transactionId) {
       return json({ success: false, error: 'Transaction ID not found in payment response.' });

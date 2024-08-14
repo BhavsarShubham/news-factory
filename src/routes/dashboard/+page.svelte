@@ -12,6 +12,7 @@
     userEmail?: string;
     category: Category;
     popularity?: string;
+    txId?: string; // Include txId field
   }
 
   let recentNews: NewsArticle[] = [];
@@ -32,7 +33,7 @@
       if (response.ok) {
         const news = await response.json();
         recentNews = news.slice(0, 3); // Display the first 3 news articles as recent news
-        // popularNews = news.filter(article => article.popularity === 'high').slice(0, 3); // Display the first 3 popular news articles
+        popularNews = news.filter(article => article.popularity === 'high').slice(0, 3); // Display the first 3 popular news articles
       } else {
         const errorData = await response.json();
         errorMessage = `Failed to fetch news: ${errorData.error}`;
@@ -48,6 +49,12 @@
   function handleCategoryClick(category: string) {
     selectedCategory = category;
     fetchNews();
+  }
+
+  function handleTransactionClick(txId?: string) {
+    if (txId) {
+      window.location.href = `https://whatsonchain.com/tx/${txId}`;
+    }
   }
 
   onMount(() => {
@@ -82,7 +89,6 @@
       <h2 class="text-xl font-semibold mt-8 mb-4 text-gray-900">Notifications</h2>
       <p class="text-gray-700">You have 3 new notifications.</p>
     </div>
-    
   </div>
 
   <!-- Main content -->
@@ -99,64 +105,72 @@
 
     <!-- Main content area -->
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-6">
-      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-6">
-        <div class="container mx-auto px-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Recent News -->
-            <div class="flex-1 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-              <h2 class="text-2xl font-semibold mb-4 text-gray-900">Recent News</h2>
-              {#if isLoading}
-                <p class="text-lg font-medium text-gray-600">Loading...</p>
-              {:else if errorMessage}
-                <p class="text-red-600">{errorMessage}</p>
-              {:else if recentNews.length === 0}
-                <p class="text-lg font-medium text-gray-600">No recent news available.</p>
-              {:else}
-                {#each recentNews as article}
-                  <div class="p-4 mb-4 bg-gray-100 rounded-lg shadow-md">
-                    <h3 class="text-xl font-bold text-gray-800">{article.title}</h3>
-                    <p class="text-gray-700">{article.content}</p>
-                    {#if article.image}
-                      <img src={article.image} alt={article.title} class="w-full h-auto mt-2 rounded-lg"/>
-                    {/if}
-                    <div class="mt-4 text-sm text-gray-600">
-                      <span>Published by: {article.userEmail || 'Anonymous'}</span>
-                      <span class="ml-4">Category: {article.category.name}</span>
-                    </div>
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Recent News -->
+          <div class="flex-1 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-900">Recent News</h2>
+            {#if isLoading}
+              <p class="text-lg font-medium text-gray-600">Loading...</p>
+            {:else if errorMessage}
+              <p class="text-red-600">{errorMessage}</p>
+            {:else if recentNews.length === 0}
+              <p class="text-lg font-medium text-gray-600">No recent news available.</p>
+            {:else}
+              {#each recentNews as article}
+                <div class="p-4 mb-4 bg-gray-100 rounded-lg shadow-md">
+                  <h3 class="text-xl font-bold text-gray-800">{article.title}</h3>
+                  <p class="text-gray-700">{article.content}</p>
+                  {#if article.image}
+                    <img src={article.image} alt={article.title} class="w-full h-auto mt-2 rounded-lg"/>
+                  {/if}
+                  <div class="flex items-center justify-between mt-4">
+                    <span class="text-sm text-gray-600">Published by: {article.userEmail || 'Anonymous'}</span>
+                    <span class="text-sm text-gray-600">Category: {article.category.name}</span>
+                    {#if article.txId}
+                    <button on:click={() => handleTransactionClick(article.txId)} class="text-red-500">View Transaction</button>
+                  {:else}
+                    <span class="text-sm text-gray-600">No Transaction ID</span>
+                  {/if}
                   </div>
-                {/each}
-              {/if}
-            </div>
-  
-            <!-- Popular News -->
-            <div class="flex-1 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-              <h2 class="text-2xl font-semibold mb-4 text-gray-900">Popular News</h2>
-              {#if isLoading}
-                <p class="text-lg font-medium text-gray-600">Loading...</p>
-              {:else if errorMessage}
-                <p class="text-red-600">{errorMessage}</p>
-              {:else if popularNews.length === 0}
-                <p class="text-lg font-medium text-gray-600">No popular news available.</p>
-              {:else}
-                {#each popularNews as article}
-                  <div class="p-4 mb-4 bg-gray-100 rounded-lg shadow-md">
-                    <h3 class="text-xl font-bold text-gray-800">{article.title}</h3>
-                    <p class="text-gray-700">{article.content}</p>
-                    {#if article.image}
-                      <img src={article.image} alt={article.title} class="w-full h-auto mt-2 rounded-lg"/>
+                </div>
+              {/each}
+            {/if}
+          </div>
+
+          <!-- Popular News -->
+          <div class="flex-1 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-900">Popular News</h2>
+            {#if isLoading}
+              <p class="text-lg font-medium text-gray-600">Loading...</p>
+            {:else if errorMessage}
+              <p class="text-red-600">{errorMessage}</p>
+            {:else if popularNews.length === 0}
+              <p class="text-lg font-medium text-gray-600">No popular news available.</p>
+            {:else}
+              {#each popularNews as article}
+                <div class="p-4 mb-4 bg-gray-100 rounded-lg shadow-md">
+                  <h3 class="text-xl font-bold text-gray-800">{article.title}</h3>
+                  <p class="text-gray-700">{article.content}</p>
+                  {#if article.image}
+                    <img src={article.image} alt={article.title} class="w-full h-auto mt-2 rounded-lg"/>
+                  {/if}
+                  <div class="flex items-center justify-between mt-4">
+                    <span class="text-sm text-gray-600">Published by: {article.userEmail || 'Anonymous'}</span>
+                    <span class="text-sm text-gray-600">Category: {article.category.name}</span>
+                    <span class="text-sm text-gray-600">Popularity: {article.popularity || 'N/A'}</span>
+                    {#if article.txId}
+                      <button on:click={() => handleTransactionClick(article.txId)} class="text-red-500">View Transaction</button>
+                    {:else}
+                      <span class="text-sm text-gray-600">No Transaction ID</span>
                     {/if}
-                    <div class="mt-4 text-sm text-gray-600">
-                      <span>Published by: {article.userEmail || 'Anonymous'}</span>
-                      <span class="ml-4">Category: {article.category.name}</span>
-                      <span class="ml-4">Popularity: {article.popularity || 'N/A'}</span>
-                    </div>
                   </div>
-                {/each}
-              {/if}
-            </div>
+                </div>
+              {/each}
+            {/if}
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   </div>
-  
+</div>

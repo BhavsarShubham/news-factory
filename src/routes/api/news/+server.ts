@@ -3,14 +3,6 @@ import type { RequestHandler } from "@sveltejs/kit";
 
 const prisma = new PrismaClient();
 
-interface NewsArticlePayload {
-  title: string;
-  content: string;
-  category: string;
-  image?: string;
-  userWallet: string;
-}
-
 export const GET: RequestHandler = async ({ url }) => {
   try {
     const category = url.searchParams.get('category');

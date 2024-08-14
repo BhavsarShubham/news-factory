@@ -23,6 +23,12 @@
     likes: number;
     createdAt: string;
     comments: Comment[];
+    txId?: string;  // Add this field
+  }
+  function handleTransactionClick(txId?: string) {
+    if (txId) {
+      window.location.href = `https://whatsonchain.com/tx/${txId}`;
+    }
   }
 
   let news: NewsArticle[] = [];
@@ -132,7 +138,6 @@
     fetchNews();
   }
 </script>
-
 <section class="bg-white dark:bg-gray-900">
   <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-12">
     <header class="mb-8">
@@ -161,7 +166,13 @@
                 <span class="text-sm text-gray-600 dark:text-gray-400">Published by: {article.userWallet ? `${article.userWallet.slice(-4)}` : 'Anonymous'}</span>
                 <span class="text-sm text-gray-600 dark:text-gray-400">Category: {article.category.name}</span>
                 <span class="text-sm text-gray-600 dark:text-gray-400">Popularity: {article.popularity || 'N/A'}</span>
+                {#if article.txId}
+                  <button on:click={() => handleTransactionClick(article.txId)} class="text-red-500">View Transaction</button>
+                {:else}
+                  <span class="text-sm text-gray-600 dark:text-gray-400">No Transaction ID</span>
+                {/if}
               </div>
+              
               <button on:click={() => likeArticle(article.id)} class="mt-2 text-blue-500">Like ({article.likes})</button>
               <div class="mt-4">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Comments</h3>
