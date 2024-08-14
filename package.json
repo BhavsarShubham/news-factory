@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.2.2",
-    "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/kit": "^2.5.22",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",

@@ -14,6 +14,7 @@ CREATE TABLE "NewsArticle" (
     "image" TEXT,
     "userEmail" TEXT,
     "userWallet" TEXT NOT NULL,
+    "txId" TEXT NOT NULL,
     "categoryId" INTEGER NOT NULL,
     "popularity" TEXT,
     "likes" INTEGER NOT NULL DEFAULT 0,
@@ -41,6 +42,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "walletAddress" TEXT NOT NULL,
+    "accessToken" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

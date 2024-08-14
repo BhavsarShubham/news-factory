@@ -1,29 +1,65 @@
-<script lang="ts">
-    import { onMount } from 'svelte';
-    let email = '';
-    let amount = 10; // Hardcoded amount for now
-    let password = '';
-    let responseMessage = '';
-  
-    async function handlePayment() {
-      const response = await fetch('/api/payments', {
-        method: 'POST',
-        body: new URLSearchParams({
-          email,
-          amount: amount.toString(),
-          password // Include password in the request
-        }),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      });
-  
-      const result = await response.json();
-      responseMessage = result.success
-        ? `Payment successful. Transaction ID: ${result.transactionId}`
-        : `Payment failed: ${result.error}`;
+<script>
+  import { onMount } from 'svelte';
+
+  let email = '';
+  let amount = 10;
+  let password = '';
+  let responseMessage = '';
+  let newsData = null;
+
+  onMount(() => {
+    // Retrieve newsData from sessionStorage
+    const storedNewsData = sessionStorage.getItem('newsData');
+    if (storedNewsData) {
+      newsData = JSON.parse(storedNewsData);
+    } else {
+      // Handle the case where newsData is not found
+      console.error('No news data found');
     }
-  </script>
+  });
+
+  async function handlePayment() {
+    const response = await fetch('/api/payments', {
+      method: 'POST',
+      body: new URLSearchParams({
+        email,
+        amount: amount.toString(),
+        password,
+        newsData: JSON.stringify(newsData), // Send newsData as a JSON string
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      responseMessage = `Payment successful. Transaction ID: ${result.transactionId}`;
+
+      // Save the news article with the transaction ID
+      await fetch('/api/news', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...newsData,
+          transactionId: result.transactionId
+        }),
+      });
+
+      // Clear the sessionStorage after successful payment and saving news
+      sessionStorage.removeItem('newsData');
+
+      // Redirect to the feed page after successful payment and saving news
+      window.location.href = '/feeds';
+    } else {
+      responseMessage = `Payment failed: ${result.error}`;
+    }
+  }
+</script>
+
+
   
   <style>
     .payment-form {

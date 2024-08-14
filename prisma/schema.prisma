@@ -1,16 +1,16 @@
-datasource db { 
-  provider = "postgresql" 
-  url      = env("DATABASE_URL") 
-} 
- 
-generator client { 
-  provider = "prisma-client-js" 
-} 
- 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
 model Category {
-  id    Int      @id @default(autoincrement())
-  name  String   @unique
-  news  NewsArticle[]
+  id   Int           @id @default(autoincrement())
+  name String        @unique
+  news NewsArticle[]
 }
 
 model NewsArticle {
@@ -20,6 +20,7 @@ model NewsArticle {
   image         String?
   userEmail     String?
   userWallet    String
+  txId          String    // Ensure this field is defined
   categoryId    Int
   category      Category  @relation(fields: [categoryId], references: [id])
   popularity    String?
@@ -27,21 +28,23 @@ model NewsArticle {
   createdAt     DateTime  @default(now())
   comments      Comment[]
   commentsCount Int       @default(0)
-  trending      Boolean   @default(false) // Add a field to mark trending articles
+  trending      Boolean   @default(false)
 }
 
+
 model Comment {
-  id            Int          @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   newsArticleId Int
-  newsArticle   NewsArticle  @relation(fields: [newsArticleId], references: [id])
+  newsArticle   NewsArticle @relation(fields: [newsArticleId], references: [id])
   content       String
-  user          String       @default("Anonymous")
-  createdAt     DateTime     @default(now())
+  user          String      @default("Anonymous")
+  createdAt     DateTime    @default(now())
 }
+
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
-  password     String
+  id            Int     @id @default(autoincrement())
+  email         String  @unique
+  password      String
   walletAddress String  @unique
-  accessToken  String?  // Add this line to store the access token
+  accessToken   String? // Add this line to store the access token
 }
